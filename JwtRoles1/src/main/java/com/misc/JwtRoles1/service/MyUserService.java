@@ -32,7 +32,13 @@ public class MyUserService {
         MyUser myUser = new MyUser();
         myUser.setMyusername(myAuthRequest.getMyusername());
         myUser.setMypassword(bCryptPasswordEncoder.encode(myAuthRequest.getMypassword()));
-        myUser.setMyroles("ROLE_ADMIN");
+
+        //TO DO - Change the below logic as per business requirements
+        if(myAuthRequest.getMyusername().contains("admin")){
+            myUser.setMyroles("ADMIN");
+        } else {
+            myUser.setMyroles("USER");
+        }
         myUserRepository.save(myUser);
 
         MyAuthResponse myAuthResponse = new MyAuthResponse();
