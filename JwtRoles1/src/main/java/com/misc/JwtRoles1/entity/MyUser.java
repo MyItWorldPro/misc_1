@@ -16,9 +16,14 @@ public class MyUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int myid;
+
     private String myname;
+
+    @Column(unique=true)
     private String myusername;
+
     private String mypassword;
+
     private String myroles;
 
 }

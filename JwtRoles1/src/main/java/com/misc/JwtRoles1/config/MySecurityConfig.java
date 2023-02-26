@@ -28,9 +28,9 @@ public class MySecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf().disable()
-                .authorizeHttpRequests().antMatchers("/auth/helloworld","/auth/welcome").permitAll()
+                .authorizeHttpRequests().antMatchers("/auth/**").permitAll()
                     .and()
-                .authorizeHttpRequests().antMatchers("/auth/**").authenticated()
+                .authorizeHttpRequests().antMatchers("/product/**").authenticated()
                     .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
