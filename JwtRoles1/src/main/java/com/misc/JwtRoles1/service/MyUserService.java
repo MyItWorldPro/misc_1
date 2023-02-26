@@ -32,6 +32,7 @@ public class MyUserService {
         MyUser myUser = new MyUser();
         myUser.setMyusername(myAuthRequest.getMyusername());
         myUser.setMypassword(bCryptPasswordEncoder.encode(myAuthRequest.getMypassword()));
+        myUser.setMyroles("ROLE_ADMIN");
         myUserRepository.save(myUser);
 
         MyAuthResponse myAuthResponse = new MyAuthResponse();

@@ -53,7 +53,7 @@ public class MyAuthController {
         if (authentication.isAuthenticated()) {
             return myJwtService.generateTokenFromMyUsername(myAuthRequest.getMyusername());
         } else {
-            throw new UsernameNotFoundException("Invalid User 1!!");
+            throw new UsernameNotFoundException("Invalid User !!");
         }
     }
 
