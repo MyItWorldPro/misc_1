@@ -1,6 +1,7 @@
 package com.misc.JwtRoles1.controller;
 
 import com.misc.JwtRoles1.dto.MyAuthRequest;
+import com.misc.JwtRoles1.dto.MyAuthResponse;
 import com.misc.JwtRoles1.service.MyJwtService;
 import com.misc.JwtRoles1.service.MyUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,13 +49,21 @@ public class MyAuthController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody MyAuthRequest myAuthRequest) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                myAuthRequest.getMyusername(), myAuthRequest.getMypassword()));
-        if (authentication.isAuthenticated()) {
-            return myJwtService.generateTokenFromMyUsername(myAuthRequest.getMyusername());
+    public ResponseEntity<Object> login(@RequestBody MyAuthRequest myAuthRequest) {
+        Authentication authentication = null;
+        try {
+            authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                    myAuthRequest.getMyusername(), myAuthRequest.getMypassword()));
+        } catch (AuthenticationException ex) {
+            return new ResponseEntity<>("Invalid Credentials!", HttpStatus.FORBIDDEN);
+        }
+        if (null != authentication && authentication.isAuthenticated()) {
+            MyAuthResponse myAuthResponse = new MyAuthResponse();
+            myAuthResponse.setMyusername(myAuthRequest.getMyusername());
+            myAuthResponse.setMytoken(myJwtService.generateTokenFromMyUsername(myAuthRequest.getMyusername()));
+            return new ResponseEntity<>(myAuthResponse, HttpStatus.OK);
         } else {
-            throw new UsernameNotFoundException("Invalid User !!");
+            return new ResponseEntity<>("Invalid Credentials!", HttpStatus.FORBIDDEN);
         }
     }
 
